@@ -1,0 +1,98 @@
+package me.EBChris;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import net.md_5.bungee.api.ChatColor;
+
+public class BugReport extends JavaPlugin {
+
+	
+	@Override
+	public void onDisable() {
+		
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
+		Player player = (Player) sender;
+		
+		FileConfiguration config = this.getConfig();
+		
+		//Reporting a bug
+		if (cmd.getName().equalsIgnoreCase("bug") && sender instanceof Player) {
+		
+			if (args.length >=1) {
+				
+				if (!player.hasPermission("bugreport.bug")) {
+				
+				String bugMessage = "";
+				
+				for (String arg : args) {
+					bugMessage = bugMessage + arg + " ";
+				}
+				
+				//Handling the arguments
+				if (!config.contains(player.getName().toLowerCase())) {
+					config.set(player.getName().toLowerCase(), bugMessage);
+					player.sendMessage(ChatColor.GREEN + "Bug reported successfully!");
+					saveConfig();
+				} else player.sendMessage(ChatColor.RED + "Bug already submitted!");
+				
+			} else player.sendMessage(ChatColor.RED + "Enter your bug report after the /bug command!");
+
+		} else player.sendMessage(ChatColor.RED + "You need permission to report bugs!");
+			
+			
+			return true;
+					
+	}   // Viewing all bugs
+		if (cmd.getName().equalsIgnoreCase("viewbugs") && sender instanceof Player) {
+			
+			if (!player.hasPermission("bugreport.viewbugs")) {
+				
+			//Iterating through each bug report in config
+				 for (String key : config.getKeys(false)) {
+					 player.sendMessage(ChatColor.YELLOW + key + ": " + config.getString(key));
+				 }
+				 if (config.getKeys(false).isEmpty()) {
+					 player.sendMessage(ChatColor.GREEN + "No bugs found!");
+				 }
+		
+			} else player.sendMessage(ChatColor.RED + "You need permission to view bugs!");
+			
+			
+		return true;	
+		
+	    }
+		// Deleting a bug
+		if (cmd.getName().equalsIgnoreCase("delbug") && sender instanceof Player) {
+			
+			if (args.length == 1) {
+				
+				if (config.contains(args[0].toLowerCase())) {
+					
+					if (!player.hasPermission("bugreport.delbug")) {
+					
+					config.set(args[0], null);
+					saveConfig();
+					player.sendMessage(ChatColor.GREEN + "Bug deleted successfully!");
+					
+				} else player.sendMessage(ChatColor.RED + "Player not found!");
+		
+			} else player.sendMessage(ChatColor.RED + "Incorrect arguments, e.g (/delbug (playername)");
+			
+		} 	else player.sendMessage(ChatColor.RED + "You need permission to delete bugs!");		
+			
+			return true;
+			
+		} 
+		return false;
+		
+		}
+		
+	}
+
