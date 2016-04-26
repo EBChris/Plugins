@@ -13,6 +13,7 @@ public class BugReport extends JavaPlugin {
 	@Override
 	public void onEnable(){ //added your onEnable statement
 	getLogger().info("Plugin Enabled");
+	this.saveDefaultConfig();
 	}
 	
 	@Override
@@ -27,11 +28,10 @@ public class BugReport extends JavaPlugin {
 		FileConfiguration config = this.getConfig();
 		
 		//Reporting a bug
-		if (cmd.getName().equalsIgnoreCase("bug") && sender instanceof Player) {
-		
+		if (cmd.getName().equalsIgnoreCase("bug")) {
+			if(player instanceof Player && player.hasPermission("bugreport.bug")){
+			
 			if (args.length >=1) {
-				
-				if (!player.hasPermission("bugreport.bug")) {
 				
 				String bugMessage = "";
 				
@@ -56,7 +56,7 @@ public class BugReport extends JavaPlugin {
 	}   // Viewing all bugs
 		if (cmd.getName().equalsIgnoreCase("viewbugs") && sender instanceof Player) {
 			
-			if (!player.hasPermission("bugreport.viewbugs")) {
+			if (player.hasPermission("bugreport.viewbugs")) {
 				
 			//Iterating through each bug report in config
 				 for (String key : config.getKeys(false)) {
@@ -74,12 +74,11 @@ public class BugReport extends JavaPlugin {
 	    }
 		// Deleting a bug
 		if (cmd.getName().equalsIgnoreCase("delbug") && sender instanceof Player) {
-			
+			if (player.hasPermission("bugreport.delbug")) {
 			if (args.length == 1) {
-				
 				if (config.contains(args[0].toLowerCase())) {
 					
-					if (!player.hasPermission("bugreport.delbug")) {
+					
 					
 					config.set(args[0], null);
 					saveConfig();
