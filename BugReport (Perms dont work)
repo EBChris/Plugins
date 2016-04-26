@@ -10,6 +10,10 @@ import net.md_5.bungee.api.ChatColor;
 
 public class BugReport extends JavaPlugin {
 
+	@Override
+	public void onEnable(){ //added your onEnable statement
+	getLogger().info("Plugin Enabled");
+	}
 	
 	@Override
 	public void onDisable() {
