@@ -8,12 +8,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class CustomMOTD extends JavaPlugin {
+public class CustomMOTD extends JavaPlugin implements Listener{
 	
 	private String motd;
 
 	@Override
 	public void onEnable() {
+	Bukkit.getPluginManager().registerEvents(this, this);
 	System.out.println("[CustomMOTD] Enabled!");
 	motd = "Minecraft Server";
 		
